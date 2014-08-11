@@ -1,0 +1,40 @@
+* {
+  box-sizing: border-box;
+}
+
+.lift-graph {
+  &-container {
+    width: 100%;
+  }
+
+  &-graph {
+    float: right;
+    width: 100%;
+    height: 14em;
+    margin-left: -5em;
+    padding-left: 5em;
+  }
+
+  &-axis-x {
+    clear: both;
+    margin-left: 5em;
+  }
+
+  &-axis-y {
+    float: left;
+    width: 5em;
+  }
+
+  &-legend {
+    background-color: transparent;
+    color: #333;
+
+    li {
+      display: inline-block;
+    }
+
+    .line .swatch {
+      border-radius: 50%;
+    }
+  }
+}

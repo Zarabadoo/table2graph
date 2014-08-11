@@ -1,0 +1,34 @@
+* {
+  box-sizing: border-box;
+}
+
+.lift-graph-container {
+  width: 100%;
+}
+.lift-graph-graph {
+  float: right;
+  width: 100%;
+  height: 14em;
+  margin-left: -5em;
+  padding-left: 5em;
+}
+.lift-graph-axis-x {
+  clear: both;
+  margin-left: 5em;
+}
+.lift-graph-axis-y {
+  float: left;
+  width: 5em;
+}
+.lift-graph-legend {
+  background-color: transparent;
+  color: #333;
+}
+.lift-graph-legend li {
+  display: inline-block;
+}
+.lift-graph-legend .line .swatch {
+  border-radius: 50%;
+}
+
+/*# sourceMappingURL=styles.css.map */
