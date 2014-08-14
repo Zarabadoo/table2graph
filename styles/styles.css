@@ -1,26 +1,30 @@
 * {
-  box-sizing: border-box;
+  -moz-box-sizing: border-box;
+       box-sizing: border-box;
 }
 
 .lift-graph-container {
-  width: 100%;
+  padding-right: 5em;
+  padding-left: 5em;
+  font-family: sans-serif;
 }
 .lift-graph-graph {
-  float: right;
+  float: left;
   width: 100%;
-  height: 14em;
-  margin-left: -5em;
-  padding-left: 5em;
+  height: 20em;
 }
 .lift-graph-axis-x {
   clear: both;
-  margin-left: 5em;
+  width: 100%;
 }
 .lift-graph-axis-y {
   float: left;
   width: 5em;
+  height: 20em;
+  margin-left: -5em;
 }
 .lift-graph-legend {
+  clear: both;
   background-color: transparent;
   color: #333;
 }
@@ -31,4 +35,58 @@
   border-radius: 50%;
 }
 
-/*# sourceMappingURL=styles.css.map */
+.rickshaw_graph .tick {
+  font-family: sans-serif;
+}
+.rickshaw_graph .detail {
+  width: .2em;
+  margin-left: -.1em;
+  background: rgba(221, 221, 221, 0.5);
+}
+.rickshaw_graph .detail .x_label {
+  position: static;
+  padding: 0;
+  font-size: 1em;
+  background: none;
+  border: none;
+  opacity: 1;
+  color: #333;
+}
+.rickshaw_graph .detail .item {
+  margin-top: -1.45em;
+  margin-right: 1.3em;
+  margin-left: 1.3em;
+  padding: .7em;
+  line-height: 1.3em;
+}
+.rickshaw_graph .detail .item.active {
+  background: rgba(255, 255, 255, 0.8);
+  color: #333;
+  border: .1em solid #ddd;
+  border-radius: 0;
+}
+.rickshaw_graph .detail .item.right:after {
+  top: 1.45em;
+  border-left-color: #ddd;
+}
+.rickshaw_graph .detail .item.left:after {
+  top: 1.45em;
+  border-right-color: #ddd;
+}
+.rickshaw_graph .detail .item .swatch {
+  display: inline-block;
+  width: 1em;
+  height: 1em;
+  margin-right: .3em;
+  border-radius: 50%;
+}
+.rickshaw_graph .detail .dot {
+  width: .5em;
+  height: .5em;
+  margin-top: -.35em;
+  margin-left: -.35em;
+  line-height: .5em;
+  border-width: .2em;
+  border-radius: 50%;
+  box-shadow: none;
+}
