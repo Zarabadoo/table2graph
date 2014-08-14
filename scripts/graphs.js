@@ -304,6 +304,8 @@
     var options = this.graph.rawData.options,
         columns = this.graph.rawData.columns,
         xKey = columns[options.columnX - 1],
+        xKey = columns[options.columnX - 1],
+        nameKey = columns[options.columnName - 1],
         data = this.graph.rawData.groups,
         head = function () {
           var date = '<th>' + new Date(x * 1000).toUTCString() + '</th>',
@@ -311,18 +313,24 @@
 
           return '<thead><tr>' + date + variations + '</tr></thead>';
         },
-        rows = function () {},
+        rows = function () {
+          var output = '';
+
+          for (var key = 0; key < data[series.name].length; key++) {
+            if (data[series.name][key][xKey] == x) {
+              for (var property in data[series.name][key]) {
+                if (data[series.name][key].hasOwnProperty(property) && property != xKey && property != nameKey) {
+                  output = output + '<tr><td>' + property + '</td><td>' + data[series.name][key][property] + '</td></tr>';
+                }
+              }
+            }
+          };
+
+          return '<tbody>' + output + '</tbody>';
+        },
         columns = function () {};
 
-    for (var key = 0; key < data[series.name].length; key++) {
-      if (data[series.name][key][xKey] == x) {
-        for (var i = 0; i < data[series.name][key].length; i++) {
-          if (key != xKey) {
-            // console.log(i);
-          }
-        }
-      }
-    }
+
 
     return '<table>' + head() + rows() + '</table>';
   }
@@ -357,7 +365,7 @@
     this.setSeriesHighlight();
     this.setSeriesToggle();
     this.graph.render();
-    // this.hideTable();
+    this.hideTable();
   };
 
   // Define the jQuery plugin.
