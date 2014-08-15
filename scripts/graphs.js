@@ -301,36 +301,60 @@
 
   // Format hover detail.
   liftGraph.prototype.formatHoverDetail = function (series, x, y) {
-    var options = this.graph.rawData.options,
+    var self = this,
+        options = this.graph.rawData.options,
         columns = this.graph.rawData.columns,
         xKey = columns[options.columnX - 1],
-        xKey = columns[options.columnX - 1],
+        yKey = columns[options.columnY - 1],
         nameKey = columns[options.columnName - 1],
         data = this.graph.rawData.groups,
         head = function () {
           var date = '<th>' + new Date(x * 1000).toUTCString() + '</th>',
-              variations = '<th style="background-color: ' + series.color + '">' + series.name + '</th>';
+              variations = '<th style="background-color: ' + series.color + ';">' + series.name + '</th>';
+
+          // Output the name of the series' siblings.
+          for (var i = 0; i < self.graph.series.length; i++) {
+            if (series.name != self.graph.series[i].name) {
+              variations = variations + '<th style="background-color: ' + self.graph.series[i].color + ';">' + self.graph.series[i].name + '</th>';
+            }
+          }
 
           return '<thead><tr>' + date + variations + '</tr></thead>';
+        },
+        row = function (args) {
+          var output = '<td>' + args.property + '</td>';
+
+          for (var i = 0; i < args.data.length; i++) {
+            output = output + '<td>' + args.data[i] + '</td>';
+          }
+
+          return '<tr>' + output + '</tr>';
         },
         rows = function () {
           var output = '';
 
+          // Build each row of data.
           for (var key = 0; key < data[series.name].length; key++) {
             if (data[series.name][key][xKey] == x) {
               for (var property in data[series.name][key]) {
                 if (data[series.name][key].hasOwnProperty(property) && property != xKey && property != nameKey) {
-                  output = output + '<tr><td>' + property + '</td><td>' + data[series.name][key][property] + '</td></tr>';
-                }
-              }
-            }
+                  var rowData = {property: property, data: [data[series.name][key][property]]};
+
+                  for (var group in data) {
+                    if (data.hasOwnProperty(group) && series.name != data[group][key][nameKey]) {
+                      // console.log(data[group][key][property]);
+                      rowData.data.push(data[group][key][property]);
+                    }
+                  }
+
+                  output = output + row(rowData);
+                };
+              };
+            };
           };
 
           return '<tbody>' + output + '</tbody>';
-        },
-        columns = function () {};
-
-
+        };
 
     return '<table>' + head() + rows() + '</table>';
   }
