@@ -289,11 +289,122 @@
   // Activate hover details.
   liftGraph.prototype.setHoverDetail = function () {
     // this.hoverDetail = new this.createHoverDetail({
-    this.hoverDetail = new Rickshaw.Graph.HoverDetail({
+    this.hoverDetail = new this.createHoverDetail({
       graph: this.graph,
       formatter: liftGraph.prototype.formatHoverDetail
     });
   }
+
+  // Create a hover detail with a custom render function.
+  liftGraph.prototype.createHoverDetail = Rickshaw.Class.create(Rickshaw.Graph.HoverDetail, {
+
+    render: function (args) {
+      var graph = this.graph;
+      var points = args.points;
+      var point = points.filter( function(p) { return p.active } ).shift();
+
+      if (point.value.y === null) return;
+
+      var formattedXValue = point.formattedXValue;
+      var formattedYValue = point.formattedYValue;
+
+      this.element.innerHTML = '';
+      this.element.style.left = graph.x(point.value.x) + 'px';
+
+      var item = document.createElement('div');
+
+      item.className = 'item';
+
+      // invert the scale if this series displays using a scale
+      var series = point.series;
+      var actualY = series.scale ? series.scale.invert(point.value.y) : point.value.y;
+
+      item.innerHTML = this.formatter(series, point.value.x, actualY, formattedXValue, formattedYValue, point);
+
+      this.element.appendChild(item);
+
+      var dot = document.createElement('div');
+      var topPosition = this.graph.y(point.value.y0 + point.value.y);
+
+      dot.className = 'dot';
+      dot.style.top = topPosition + 'px';
+      dot.style.borderColor = series.color;
+
+      this.element.appendChild(dot);
+
+      if (point.active) {
+        item.classList.add('active');
+        dot.classList.add('active');
+      }
+
+      var $item = $(item),
+          itemWidth = parseInt($item.innerWidth()),
+          itemHeight = parseInt($item.innerHeight()),
+          itemMargin = parseInt($item.css('margin-top')) + parseInt($item.css('margin-bottom'));
+
+      item.style.top = Math.round(topPosition - itemHeight - itemMargin) + 'px';
+      item.style.left = Math.round(itemWidth / 2) * -1 + 'px';
+
+      // Assume left alignment until the element has been displayed and
+      // bounding box calculations are possible.
+      var alignables = [item];
+      alignables.forEach(function(el) {
+        el.classList.add('bottom');
+        el.classList.add('center');
+      });
+
+      this.show();
+
+      var alignment = this._calcLayout(item);
+
+      if (alignment.left > alignment.right) {
+        item.style.left = 'auto';
+        item.classList.remove('center');
+        item.classList.remove('right');
+        item.classList.add('left');
+      }
+
+      if (alignment.right > alignment.left) {
+        item.style.left = 'auto';
+        item.classList.remove('center');
+        item.classList.remove('left');
+        item.classList.add('right');
+      }
+
+      if (alignment.top === 0) {
+        item.style.top = topPosition + 'px';
+        item.classList.remove('bottom');
+        item.classList.add('top');
+      }
+
+      if (typeof this.onRender == 'function') {
+        this.onRender(args);
+      }
+    },
+    _calcLayout: function(element) {
+      var layout = {top: 0, right: 0, bottom: 0, left: 0};
+      var parentRect = this.element.parentNode.getBoundingClientRect();
+      var rect = element.getBoundingClientRect();
+
+      if (rect.top > parentRect.top) {
+        layout.top += rect.top - parentRect.top;
+      }
+
+      if (rect.bottom < parentRect.bottom) {
+        layout.bottom += parentRect.bottom - rect.bottom;
+      }
+
+      if (rect.right > parentRect.right) {
+        layout.right += rect.right - parentRect.right;
+      }
+
+      if (rect.left < parentRect.left) {
+        layout.left += parentRect.left - rect.left;
+      }
+
+      return layout;
+    }
+  });
 
   // Format hover detail.
   liftGraph.prototype.formatHoverDetail = function (series, x, y) {
