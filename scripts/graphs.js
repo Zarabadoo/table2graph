@@ -26,7 +26,7 @@
     min: null,
     max: null,
     padding: null,
-    interpolation: null,
+    interpolation: 'linear',
     stack: null
   };
 
@@ -164,15 +164,10 @@
 
   // Get the graph object.
   liftGraph.prototype.getGraph = function () {
-    this.graph = new Rickshaw.Graph({
+    var configuration = {
       element: this.$graph[0],
-      series: this.series,
-    });
-
-    // Add the raw data to the
-    this.graph.rawData = this;
-
-    var configuration = {};
+      series: this.series
+    };
 
     // Set the custom renderer.
     if (this.options.renderer != null) {
@@ -226,12 +221,13 @@
 
     // Set custom stack.
     if (this.options.stack != null) {
-      configuration.stack = this.options.stack == 'false' ? false : true;
+      configuration.stack = this.options.stack;
     }
 
-    this.graph.configure(configuration);
-    this.graph.setRenderer('line');
-    this.graph.offset = 'zero';
+    this.graph = new Rickshaw.Graph(configuration);
+
+    // Add the raw data to the
+    this.graph.rawData = this;
   }
 
   // Get the x-axis.
@@ -241,7 +237,7 @@
           return labels[n];
         }
 
-    this.axisX = new Rickshaw.Graph.Axis.Time({
+    this.axisX = new Rickshaw.Graph.Axis.X({
       element: this.$axisX[0],
       orientation: 'bottom',
       graph: this.graph
@@ -292,8 +288,8 @@
 
   // Activate hover details.
   liftGraph.prototype.setHoverDetail = function () {
+    // this.hoverDetail = new this.createHoverDetail({
     this.hoverDetail = new Rickshaw.Graph.HoverDetail({
-    // this.hoverDetail = new this.hover({
       graph: this.graph,
       formatter: liftGraph.prototype.formatHoverDetail
     });
@@ -321,11 +317,16 @@
 
           return '<thead><tr>' + date + variations + '</tr></thead>';
         },
-        row = function (args) {
-          var output = '<td>' + args.property + '</td>';
+        row = function (data) {
+          var output = '<td class="label">' + data.property + '</td>';
 
-          for (var i = 0; i < args.data.length; i++) {
-            output = output + '<td>' + args.data[i] + '</td>';
+          for (var i = 0; i < data.data.length; i++) {
+            if (typeof data.data[i].active != 'undefined' && data.data[i].active == true) {
+              output = output + '<td class="active">' + data.data[i].value + '</td>';
+            }
+            else {
+              output = output + '<td>' + data.data[i].value + '</td>';
+            }
           }
 
           return '<tr>' + output + '</tr>';
@@ -338,12 +339,11 @@
             if (data[series.name][key][xKey] == x) {
               for (var property in data[series.name][key]) {
                 if (data[series.name][key].hasOwnProperty(property) && property != xKey && property != nameKey) {
-                  var rowData = {property: property, data: [data[series.name][key][property]]};
+                  var rowData = {property: property, data: [{value: data[series.name][key][property], active: true}]};
 
                   for (var group in data) {
                     if (data.hasOwnProperty(group) && series.name != data[group][key][nameKey]) {
-                      // console.log(data[group][key][property]);
-                      rowData.data.push(data[group][key][property]);
+                      rowData.data.push({value: data[group][key][property]});
                     }
                   }
 
@@ -356,7 +356,7 @@
           return '<tbody>' + output + '</tbody>';
         };
 
-    return '<table>' + head() + rows() + '</table>';
+    return '<table class="lift-graph-details">' + head() + rows() + '</table>';
   }
 
   // Highlight a series when hovering on legend.

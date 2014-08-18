@@ -34,6 +34,24 @@
 .lift-graph-legend .line .swatch {
   border-radius: 50%;
 }
+.lift-graph-details {
+  border-collapse: collapse;
+}
+.lift-graph-details th,
+.lift-graph-details td {
+  padding: .4em;
+}
+.lift-graph-details [style^="background-color"] {
+  color: #fff;
+  font-weight: normal;
+}
+.lift-graph-details .label {
+  font-weight: bold;
+  text-align: right;
+}
+.lift-graph-details .active {
+  background-color: #ddd;
+}
 
 .rickshaw_graph .tick {
   font-family: sans-serif;
@@ -56,7 +74,7 @@
   margin-top: -1.45em;
   margin-right: 1.3em;
   margin-left: 1.3em;
-  padding: .7em;
+  padding: 0;
   line-height: 1.3em;
 }
 .rickshaw_graph .detail .item.active {
