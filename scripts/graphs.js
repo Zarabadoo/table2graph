@@ -237,9 +237,9 @@
           return labels[n];
         }
 
-    this.axisX = new Rickshaw.Graph.Axis.X({
+    this.axisX = new Rickshaw.Graph.Axis.Time({
       element: this.$axisX[0],
-      orientation: 'bottom',
+      orientation: 'top',
       graph: this.graph
     });
   }

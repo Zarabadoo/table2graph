@@ -77,20 +77,11 @@
     margin-left: -.1em;
     background: rgba(#ddd, .5);
 
-    .x_label {
-      position: static;
-      padding: 0;
-      font-size: 1em;
-      background: none;
-      border: none;
-      opacity: 1;
-      color: #333;
-    }
-
     .item {
-      margin: 1em -1em;
+      margin: 1.4em -1em;
       padding: 0;
       line-height: 1.3em;
+      /* box-shadow: 0 .1em .3em rgba(#333, .6); */
 
       &.active {
         background: rgba(#fff, .8);
@@ -99,22 +90,96 @@
         border-radius: 0;
       }
 
-      &.right:after {
-        top: 1.45em;
-        border-left-color: #ddd;
-      }
-
-      &.left:after {
-        top: 1.45em;
-        border-right-color: #ddd;
-      }
-
       .swatch {
         display: inline-block;
         width: 1em;
         height: 1em;
         margin-right: .3em;
         border-radius: 50%;
+      }
+
+      &:before,
+      &:after {
+        display: block;
+        content: " ";
+        position: absolute;
+        width: 0;
+        height: 0;
+        overflow: hidden;
+        top: auto; // Override default Rickshaw styles.
+        right: 50%;
+      }
+
+      &:before {
+        bottom: -1.2em;
+        border: .6em solid transparent;
+        border-top-color: #ddd;
+        margin-right: -1.6em;
+      }
+
+      &:after {
+        border-width: .5em;
+        border-top-color: #fff;
+        border-left-color: transparent; // Override default Rickshaw styles.
+        bottom: -1em;
+        margin-right: -1.5em;
+      }
+
+      &.left {
+        &:before,
+        &:after {
+          top: auto;
+          right: auto;
+          margin: 0;
+        }
+
+        &:before {
+          left: .4em;
+        }
+
+        &:after {
+          left: .5em;
+          border-width: .5em;
+          border-top-color: #fff;
+          border-right-color: transparent;
+        }
+      }
+
+      &.right {
+        &:before,
+        &:after {
+          top: auto;
+          margin: 0;
+        }
+
+        &:before {
+          right: .4em;
+        }
+
+        &:after {
+          right: .5em;
+          border-width: .5em;
+          border-top-color: #fff;
+          border-left-color: transparent;
+        }
+      }
+
+      &.top {
+        &:before,
+        &:after {
+          bottom: auto;
+          border-top-color: transparent;
+        }
+
+        &:before {
+          top: -1.2em;
+          border-bottom-color: #ddd;
+        }
+
+        &:after {
+          top: -1em;
+          border-bottom-color: #fff;
+        }
       }
     }
 

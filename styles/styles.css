@@ -61,19 +61,11 @@
   margin-left: -.1em;
   background: rgba(221, 221, 221, 0.5);
 }
-.rickshaw_graph .detail .x_label {
-  position: static;
-  padding: 0;
-  font-size: 1em;
-  background: none;
-  border: none;
-  opacity: 1;
-  color: #333;
-}
 .rickshaw_graph .detail .item {
-  margin: 1em -1em;
+  margin: 1.4em -1em;
   padding: 0;
   line-height: 1.3em;
+  /* box-shadow: 0 .1em .3em rgba(#333, .6); */
 }
 .rickshaw_graph .detail .item.active {
   background: rgba(255, 255, 255, 0.8);
@@ -81,20 +73,74 @@
   border: .1em solid #ddd;
   border-radius: 0;
 }
-.rickshaw_graph .detail .item.right:after {
-  top: 1.45em;
-  border-left-color: #ddd;
-}
-.rickshaw_graph .detail .item.left:after {
-  top: 1.45em;
-  border-right-color: #ddd;
-}
 .rickshaw_graph .detail .item .swatch {
   display: inline-block;
   width: 1em;
   height: 1em;
   margin-right: .3em;
   border-radius: 50%;
+}
+.rickshaw_graph .detail .item:before, .rickshaw_graph .detail .item:after {
+  display: block;
+  content: " ";
+  position: absolute;
+  width: 0;
+  height: 0;
+  overflow: hidden;
+  top: auto;
+  right: 50%;
+}
+.rickshaw_graph .detail .item:before {
+  bottom: -1.2em;
+  border: .6em solid transparent;
+  border-top-color: #ddd;
+  margin-right: -1.6em;
+}
+.rickshaw_graph .detail .item:after {
+  border-width: .5em;
+  border-top-color: #fff;
+  border-left-color: transparent;
+  bottom: -1em;
+  margin-right: -1.5em;
+}
+.rickshaw_graph .detail .item.left:before, .rickshaw_graph .detail .item.left:after {
+  top: auto;
+  right: auto;
+  margin: 0;
+}
+.rickshaw_graph .detail .item.left:before {
+  left: .4em;
+}
+.rickshaw_graph .detail .item.left:after {
+  left: .5em;
+  border-width: .5em;
+  border-top-color: #fff;
+  border-right-color: transparent;
+}
+.rickshaw_graph .detail .item.right:before, .rickshaw_graph .detail .item.right:after {
+  top: auto;
+  margin: 0;
+}
+.rickshaw_graph .detail .item.right:before {
+  right: .4em;
+}
+.rickshaw_graph .detail .item.right:after {
+  right: .5em;
+  border-width: .5em;
+  border-top-color: #fff;
+  border-left-color: transparent;
+}
+.rickshaw_graph .detail .item.top:before, .rickshaw_graph .detail .item.top:after {
+  bottom: auto;
+  border-top-color: transparent;
+}
+.rickshaw_graph .detail .item.top:before {
+  top: -1.2em;
+  border-bottom-color: #ddd;
+}
+.rickshaw_graph .detail .item.top:after {
+  top: -1em;
+  border-bottom-color: #fff;
 }
 .rickshaw_graph .detail .dot {
   width: .5em;
