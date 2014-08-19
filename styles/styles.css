@@ -39,7 +39,7 @@
 }
 .lift-graph-details th,
 .lift-graph-details td {
-  padding: .4em;
+  padding: .5em;
 }
 .lift-graph-details [style^="background-color"] {
   color: #fff;
@@ -63,15 +63,15 @@
 }
 .rickshaw_graph .detail .item {
   margin: 1.4em -1em;
-  padding: 0;
+  padding: .1em;
   line-height: 1.3em;
-  /* box-shadow: 0 .1em .3em rgba(#333, .6); */
+  box-shadow: 0 0.1em 0.2em rgba(51, 51, 51, 0.6);
 }
 .rickshaw_graph .detail .item.active {
   background: rgba(255, 255, 255, 0.8);
   color: #333;
   border: .1em solid #ddd;
-  border-radius: 0;
+  border-radius: .3em;
 }
 .rickshaw_graph .detail .item .swatch {
   display: inline-block;

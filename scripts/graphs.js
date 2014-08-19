@@ -124,14 +124,15 @@
         for (var i = 0; i < groups[key].length; i++) {
           data.push({
             x: parseFloat(groups[key][i][xKey]),
-            y: parseFloat(groups[key][i][yKey])
+            y: parseFloat(groups[key][i][yKey]),
           });
         }
 
         series[counter] = {
           name: key,
           color: this.palette.color(),
-          data: data
+          data: data,
+          shortName: key.substring(0, 7) == 'control' ? 'Control' : 'V' + (counter + 1)
         };
 
         counter++;
@@ -417,12 +418,12 @@
         data = this.graph.rawData.groups,
         head = function () {
           var date = '<th>' + new Date(x * 1000).toUTCString() + '</th>',
-              variations = '<th style="background-color: ' + series.color + ';">' + series.name + '</th>';
+              variations = '<th style="background-color: ' + series.color + ';">' + series.shortName + '</th>';
 
           // Output the name of the series' siblings.
           for (var i = 0; i < self.graph.series.length; i++) {
             if (series.name != self.graph.series[i].name) {
-              variations = variations + '<th style="background-color: ' + self.graph.series[i].color + ';">' + self.graph.series[i].name + '</th>';
+              variations = variations + '<th style="background-color: ' + self.graph.series[i].color + ';">' + self.graph.series[i].shortName + '</th>';
             }
           }
 
