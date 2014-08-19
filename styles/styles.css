@@ -1,4 +1,4 @@
-* {
+.lift-graph * {
   -moz-box-sizing: border-box;
        box-sizing: border-box;
 }
@@ -50,7 +50,7 @@
   text-align: right;
 }
 .lift-graph-details .active {
-  background-color: #ddd;
+  background-color: #eee;
 }
 
 .rickshaw_graph .tick {
