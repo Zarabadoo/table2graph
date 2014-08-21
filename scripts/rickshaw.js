@@ -1,15 +1,3 @@
-(function (root, factory) {
-    if (typeof define === 'function' && define.amd) {
-        define(['d3'], function (d3) {
-            return (root.Rickshaw = factory(d3));
-        });
-    } else if (typeof exports === 'object') {
-        module.exports = factory(require('d3'));
-    } else {
-        root.Rickshaw = factory(d3);
-    }
-}(this, function (d3) {
-
 /* jshint -W079 */ 
 
 var Rickshaw = {
@@ -4100,5 +4088,4 @@ Rickshaw.Series.FixedDuration = Rickshaw.Class.create(Rickshaw.Series, {
 } );
 
 
-	return Rickshaw;
-}));
+//# sourceMappingURL=rickshaw.js.map
