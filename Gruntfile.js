@@ -72,6 +72,10 @@ module.exports = function(grunt) {
       lift: {
         src: liftSrc,
         dest: 'scripts/lift.js'
+      },
+      module: {
+        src: 'lib/scripts/lift-module.js',
+        dest: 'scripts/lift-module.js'
       }
     },
     sass: {
@@ -79,9 +83,13 @@ module.exports = function(grunt) {
         options: {
           style: 'expanded'
         },
-        files: {
-          'styles/styles.css': 'lib/sass/styles.scss'
-        }
+        files: [{
+          expand: true,
+          cwd: 'lib/sass',
+          src: ['**/*.scss'],
+          dest: 'styles',
+          ext: '.css'
+        }]
       }
     },
     uglify: {
@@ -99,6 +107,9 @@ module.exports = function(grunt) {
       },
       lift: {
         files: { 'scripts/lift.min.js': liftSrc }
+      },
+      module: {
+        files: { 'scripts/lift-module.min.js': 'lib/scripts/lift-module.js' }
       }
     },
     watch: {
