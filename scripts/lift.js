@@ -266,8 +266,82 @@ Rickshaw.Graph.ClickDetail = Rickshaw.Class.create(Rickshaw.Graph.HoverDetail, {
 Rickshaw.namespace('Rickshaw.Graph.TableLegend');
 
 Rickshaw.Graph.TableLegend = Rickshaw.Class.create(Rickshaw.Graph.Legend, {
-  render: function(args) {
-    console.log('This extension is working.');
+  // className: 'rickshaw_legend',
+
+  initialize: function(args) {
+    this.element = args.element;
+    this.graph = args.graph;
+
+    this.render();
+
+    // we could bind this.render.bind(this) here
+    // but triggering the re-render would lose the added
+    // behavior of the series toggle
+    this.graph.onUpdate( function() {} );
+  },
+
+  render: function() {
+    var self = this;
+    var $label = $(this.element).find('thead > tr > th:first-child');
+
+    // Add a new column label for the legend.
+    $(this.element).find('thead > tr').prepend('<th>Legend</th>');
+
+    this.lines = [];
+
+    var series = this.graph.series
+      .map( function(s) { return s } );
+
+    series.forEach( function(s) {
+      self.addLine(s);
+    } );
+  },
+  addLine: function (series) {
+    var self = this;
+    $(this.element).find('tbody > tr').each(function (index, row) {
+      if ($(row).find('td:first-child').text() == series.name) {
+        var line = document.createElement('td');
+
+        $(row).prepend(line);
+
+        line.className = 'legend line';
+        if (series.disabled) {
+          line.className += ' disabled';
+        }
+        if (series.className) {
+          d3.select(line).classed(series.className, true);
+        }
+
+        var swatch = document.createElement('div');
+        swatch.className = 'swatch';
+        swatch.style.backgroundColor = series.color;
+
+        line.appendChild(swatch);
+
+        var label = document.createElement('span');
+        label.className = 'label';
+        label.innerHTML = series.shortName || series.name;
+
+        line.appendChild(label);
+
+        line.series = series;
+
+        if (series.noLegend) {
+          line.style.display = 'none';
+        }
+
+        var _line = { element: line, series: series };
+        if (self.shelving) {
+          self.shelving.addAnchor(_line);
+          self.shelving.updateBehaviour();
+        }
+        if (self.highlighter) {
+          self.highlighter.addHighlightEvents(_line);
+        }
+        self.lines.push(_line);
+        return line;
+      }
+    });
   }
 });
 
@@ -410,12 +484,6 @@ Rickshaw.Graph.TableLegend = Rickshaw.Class.create(Rickshaw.Graph.Legend, {
           shortName: key.substring(0, 7) == 'control' ? 'Control' : 'V' + (counter + 1)
         };
 
-        results.each(function () {
-          if ($(this).text() == key) {
-            $(this).prepend($('<span class="swatch" style="background-color: ' + series[counter].color + ';" />'));
-          }
-        })
-
         counter++;
       }
     }
@@ -531,10 +599,9 @@ Rickshaw.Graph.TableLegend = Rickshaw.Class.create(Rickshaw.Graph.Legend, {
 
   // Get the legend.
   liftGraph.prototype.setLegend = function () {
-    this.legend = new Rickshaw.Graph.Legend({
+    this.legend = new Rickshaw.Graph.TableLegend({
       element: this.$legend[0],
       graph: this.graph,
-      naturalOrder: true
     });
   }
 
@@ -542,11 +609,10 @@ Rickshaw.Graph.TableLegend = Rickshaw.Class.create(Rickshaw.Graph.Legend, {
   liftGraph.prototype.build = function () {
     this.$graph = $('<div class="lift-graph-graph" role="presentation"></div>');
     this.$axisY = $('<div class="lift-graph-axis-y" role="presentation"></div>');
-    this.$legend = $('<div class="lift-graph-legend" role="presentation"></div>');
+    this.$legend = $('table.lift-graph-results');
 
     this.$element.addClass('lift-graph-table')
       .wrap('<div class="lift-graph-container"></div>')
-      .before(this.$legend)
       .before(this.$axisY)
       .before(this.$graph)
       .before(this.$axisX);
@@ -564,7 +630,6 @@ Rickshaw.Graph.TableLegend = Rickshaw.Class.create(Rickshaw.Graph.Legend, {
 
   // Activate hover details.
   liftGraph.prototype.setHoverDetail = function () {
-    // this.hoverDetail = new this.createHoverDetail({
     this.hoverDetail = new Rickshaw.Graph.ClickDetail({
       graph: this.graph
     });
