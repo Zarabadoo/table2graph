@@ -96,13 +96,10 @@ Rickshaw.Graph.ClickDetail = Rickshaw.Class.create(Rickshaw.Graph.HoverDetail, {
         data = this.graph.rawData.groups,
         head = function () {
           var date = '<th>' + new Date(x * 1000).toUTCString() + '</th>',
-              variations = '<th style="background-color: ' + series.color + ';">' + series.shortName + '</th>';
+              variations = '';
 
-          // Output the name of the series' siblings.
           for (var i = 0; i < self.graph.series.length; i++) {
-            if (series.name != self.graph.series[i].name) {
-              variations = variations + '<th style="background-color: ' + self.graph.series[i].color + ';">' + self.graph.series[i].shortName + '</th>';
-            }
+            variations = variations + '<th style="background-color: ' + self.graph.series[i].color + ';">' + self.graph.series[i].shortName + '</th>';
           }
 
           return '<thead><tr>' + date + variations + '</tr></thead>';
@@ -129,11 +126,15 @@ Rickshaw.Graph.ClickDetail = Rickshaw.Class.create(Rickshaw.Graph.HoverDetail, {
             if (data[series.name][key][xKey] == x) {
               for (var property in data[series.name][key]) {
                 if (data[series.name][key].hasOwnProperty(property) && property != xKey && property != nameKey) {
-                  var rowData = {property: property, data: [{value: data[series.name][key][property], active: true}]};
+                  var rowData = {property: property, data: []};
 
                   for (var group in data) {
-                    if (data.hasOwnProperty(group) && series.name != data[group][key][nameKey]) {
-                      rowData.data.push({value: data[group][key][property]});
+                    if (data.hasOwnProperty(group)) {
+                      var information = {value: data[group][key][property]};
+                      if (series.name == data[group][key][nameKey]) {
+                        information.active = true;
+                      }
+                      rowData.data.push(information);
                     }
                   }
 
