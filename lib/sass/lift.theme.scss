@@ -234,12 +234,25 @@
       }
     }
 
+    .action {
+      margin-right: .6em;
+      cursor: pointer;
+    }
+
     .swatch {
       display: inline-block;
       width: .9em;
       height: .9em;
       margin-right: .9em;
       border-radius: 50%;
+    }
+
+    .toggle-enabled .line {
+      cursor: pointer;
+
+      &.disabled .action {
+        opacity: .4;
+      }
     }
   }
 }

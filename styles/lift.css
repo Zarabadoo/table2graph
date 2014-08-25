@@ -182,10 +182,20 @@
 .lift-graph-result td:last-child {
   text-align: center;
 }
+.lift-graph-result .action {
+  margin-right: .6em;
+  cursor: pointer;
+}
 .lift-graph-result .swatch {
   display: inline-block;
   width: .9em;
   height: .9em;
   margin-right: .9em;
   border-radius: 50%;
+}
+.lift-graph-result .toggle-enabled .line {
+  cursor: pointer;
+}
+.lift-graph-result .toggle-enabled .line.disabled .action {
+  opacity: .4;
 }

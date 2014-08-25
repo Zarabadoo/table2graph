@@ -782,6 +782,30 @@ Rickshaw.Graph.TableLegend = Rickshaw.Class.create(Rickshaw.Graph.Legend, {
     });
   }
 
+  // Activate hover details.
+  liftGraph.prototype.setHoverDetail = function () {
+    this.hoverDetail = new Rickshaw.Graph.ClickDetail({
+      graph: this.graph
+    });
+  }
+
+  // Highlight a series when hovering on legend.
+  liftGraph.prototype.setSeriesHighlight = function () {
+    this.seriesHighlight = new Rickshaw.Graph.Behavior.Series.Highlight({
+      graph: this.graph,
+      legend: this.legend
+    });
+  }
+
+  // Allow a user to togle graph data via the legend.
+  liftGraph.prototype.setSeriesToggle = function () {
+    this.$legend.addClass('toggle-enabled');
+    this.seriesToggle = new Rickshaw.Graph.Behavior.Series.Toggle({
+      graph: this.graph,
+      legend: this.legend
+    });
+  }
+
   // Format the elements of the graph.
   liftGraph.prototype.build = function () {
     this.$graph = $('<div class="lift-graph-graph" role="presentation"></div>');
@@ -806,29 +830,6 @@ Rickshaw.Graph.TableLegend = Rickshaw.Class.create(Rickshaw.Graph.Legend, {
   // Show the table.
   liftGraph.prototype.showTable = function () {
     this.$element.show();
-  }
-
-  // Activate hover details.
-  liftGraph.prototype.setHoverDetail = function () {
-    this.hoverDetail = new Rickshaw.Graph.ClickDetail({
-      graph: this.graph
-    });
-  }
-
-  // Highlight a series when hovering on legend.
-  liftGraph.prototype.setSeriesHighlight = function () {
-    this.seriesHighlight = new Rickshaw.Graph.Behavior.Series.Highlight({
-      graph: this.graph,
-      legend: this.legend
-    });
-  }
-
-  // Allow a user to togle graph data via the legend.
-  liftGraph.prototype.setSeriesToggle = function () {
-    this.seriesToggle = new Rickshaw.Graph.Behavior.Series.Toggle({
-      graph: this.graph,
-      legend: this.legend
-    });
   }
 
   // Render the graph.
