@@ -7,6 +7,7 @@
   <title>Rickshaw Graphs</title>
   <meta name="description" content="">
   <meta name="viewport" content="width=device-width, initial-scale=1">
+  <link rel="stylesheet" href="bower_components/jqueryui/themes/base/all.css">
   <link rel="stylesheet" href="bower_components/rickshaw/rickshaw.min.css">
   <link rel="stylesheet" href="styles/styles.css">
   <link rel="stylesheet" href="styles/lift.css">
@@ -2087,10 +2088,16 @@
     </div>
   </div>
   <script src="bower_components/jquery/jquery.js"></script>
+  <script src="bower_components/jqueryui/jquery-ui.js"></script>
   <script src="bower_components/d3/d3.min.js"></script>
   <script src="scripts/rickshaw.min.js"></script>
   <script src="scripts/lift.min.js"></script>
   <script src="scripts/lift-module.min.js"></script>
+  <script type='text/javascript'>
+    //<![CDATA[
+      document.write("<script async src='//HOST/browser-sync-client.1.3.6.js'><\/script>".replace(/HOST/g, location.hostname));
+    //]]>
+  </script>
 </body>
 
 </html>

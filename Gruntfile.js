@@ -59,13 +59,17 @@ module.exports = function(grunt) {
     },
     browserSync: {
       options: {
-        watchTask: true,
         server: {
           baseDir: './'
-        }
+        },
+        tunnel: true,
+        watchOptions: {
+          debounceDelay: 1200
+        },
+        watchTask: true
       },
       bsFiles: {
-        src : './**/*.{css,js,html}'
+        src : ['styles/**/*.css', 'scripts/**/*.js', './*.html']
       }
     },
     clean: {
@@ -89,6 +93,11 @@ module.exports = function(grunt) {
         src: 'lib/scripts/lift-module.js',
         dest: 'scripts/lift-module.js'
       }
+    },
+    concurrent: {
+      all: ['sass', 'concurrent:scripts'],
+      clean: ['clean:style', 'clean:script'],
+      scripts: ['concat:rickshaw', 'concat:lift', 'concat:module', 'uglify:rickshaw', 'uglify:lift', 'uglify:module']
     },
     sass: {
       dist: {
@@ -143,6 +152,7 @@ module.exports = function(grunt) {
   // Load the plugin that provides the "uglify" task.
   grunt.loadNpmTasks('grunt-autoprefixer');
   grunt.loadNpmTasks('grunt-browser-sync');
+  grunt.loadNpmTasks('grunt-concurrent');
   grunt.loadNpmTasks('grunt-contrib-clean');
   grunt.loadNpmTasks('grunt-contrib-concat');
   grunt.loadNpmTasks('grunt-contrib-sass');
@@ -150,9 +160,9 @@ module.exports = function(grunt) {
   grunt.loadNpmTasks('grunt-contrib-watch');
 
   // Default task(s).
-  grunt.registerTask('default', ['style', 'script']);
+  grunt.registerTask('default', ['concurrent:clean', 'concurrent:all']);
   grunt.registerTask('style', ['clean:style', 'sass', 'autoprefixer']);
-  grunt.registerTask('script', ['clean:script', 'concat', 'uglify']);
+  grunt.registerTask('script', ['clean:script', 'concurrent:scripts']);
   grunt.registerTask('server', ['browserSync', 'watch']);
 
 };
