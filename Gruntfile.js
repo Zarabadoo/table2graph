@@ -40,6 +40,7 @@ module.exports = function(grunt) {
         'bower_components/rickshaw/src/js/Rickshaw.Series.FixedDuration.js',
       ],
       liftSrc = [
+        'lib/scripts/Rickshaw.Graph.Axis.TimeElement.js',
         'lib/scripts/Rickshaw.Graph.Axis.LabeledY.js',
         'lib/scripts/Rickshaw.Graph.ClickDetail.js',
         'lib/scripts/Rickshaw.Graph.TableLegend.js',
@@ -54,6 +55,17 @@ module.exports = function(grunt) {
     autoprefixer: {
       css: {
         src: 'styles/**/*.css'
+      }
+    },
+    browserSync: {
+      options: {
+        watchTask: true,
+        server: {
+          baseDir: './'
+        }
+      },
+      bsFiles: {
+        src : './**/*.{css,js,html}'
       }
     },
     clean: {
@@ -130,6 +142,7 @@ module.exports = function(grunt) {
 
   // Load the plugin that provides the "uglify" task.
   grunt.loadNpmTasks('grunt-autoprefixer');
+  grunt.loadNpmTasks('grunt-browser-sync');
   grunt.loadNpmTasks('grunt-contrib-clean');
   grunt.loadNpmTasks('grunt-contrib-concat');
   grunt.loadNpmTasks('grunt-contrib-sass');
@@ -140,4 +153,6 @@ module.exports = function(grunt) {
   grunt.registerTask('default', ['style', 'script']);
   grunt.registerTask('style', ['clean:style', 'sass', 'autoprefixer']);
   grunt.registerTask('script', ['clean:script', 'concat', 'uglify']);
+  grunt.registerTask('server', ['browserSync', 'watch']);
+
 };
