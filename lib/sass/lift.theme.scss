@@ -188,21 +188,21 @@
     }
   }
 
-  &-details {
-    border-collapse: collapse;
+  &-detail {
+    pointer-events: auto;
+    width: 100%;
+    max-width: 100%;
+    overflow-x: auto;
 
     th,
     td {
-      padding: .5em;
+      text-align: left;
     }
 
     [style^="background-color"] {
       color: #fff;
       font-weight: normal;
-    }
-
-    .label {
-      text-align: right;
+      text-align: center;
     }
 
     .active {
@@ -210,27 +210,28 @@
     }
   }
 
-  &-results {
+  &-result {
     width: 100%;
-    margin: 1.3em 0;
-    border-color: #bbb;
-    border-collapse: collapse;
-    font-family: sans-serif;
-    font-size: .88em;
+    max-width: 100%;
+    overflow-x: auto;
+
+    &-data {
+      width: 100%;
+      max-width: 100%;
+      margin: 1.3em 0;
+      border-color: #bbb;
+      border-collapse: collapse;
+      font-family: sans-serif;
+      font-size: .88em;
+    }
 
     th,
     td {
-      padding: .5em;
       text-align: left;
-      font-weight: normal;
 
       &:last-child {
         text-align: center;
       }
-    }
-
-    th {
-      border-bottom: .2em solid #ccc;
     }
 
     .swatch {

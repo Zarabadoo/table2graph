@@ -94,8 +94,11 @@ Rickshaw.Graph.ClickDetail = Rickshaw.Class.create(Rickshaw.Graph.HoverDetail, {
         yKey = columns[options.columnY - 1],
         nameKey = columns[options.columnName - 1],
         data = this.graph.rawData.groups,
+        time = new Date(x * 1000),
+        months = ['January', 'February', 'March', 'April', 'May', 'June', 'July', 'April', 'September', 'June', 'July', 'August', 'September', 'October', 'November', 'December']
+        humanDate = months[time.getUTCMonth()] + ' ' + time.getDate() + ', ' + time.getFullYear()
         head = function () {
-          var date = '<th>' + new Date(x * 1000).toUTCString() + '</th>',
+          var date = '<th>' + humanDate + '</th>',
               variations = '';
 
           for (var i = 0; i < self.graph.series.length; i++) {
@@ -147,7 +150,7 @@ Rickshaw.Graph.ClickDetail = Rickshaw.Class.create(Rickshaw.Graph.HoverDetail, {
           return '<tbody>' + output + '</tbody>';
         };
 
-    return '<table class="lift-graph-details">' + head() + rows() + '</table>';
+    return '<div class="lift-graph-detail"><table class="lift-graph-detail-data">' + head() + rows() + '</table></div>';
   },
   render: function (args) {
     var graph = this.graph,
@@ -165,6 +168,7 @@ Rickshaw.Graph.ClickDetail = Rickshaw.Class.create(Rickshaw.Graph.HoverDetail, {
     var item = document.createElement('div');
 
     item.className = 'item';
+    item.style.maxWidth = $(graph.element).width() + 'px';
 
     // invert the scale if this series displays using a scale
     var series = point.series,
@@ -255,6 +259,18 @@ Rickshaw.Graph.ClickDetail = Rickshaw.Class.create(Rickshaw.Graph.HoverDetail, {
     }
 
     return layout;
+  },
+  _addListeners: function() {
+    this.graph.element.addEventListener(
+      'click',
+      function(e) {
+        this.visible = true;
+        this.update(e);
+      }.bind(this),
+      false
+    );
+
+    this.graph.onUpdate( function() { this.update() }.bind(this) );
   }
 });
 
@@ -609,7 +625,7 @@ Rickshaw.Graph.TableLegend = Rickshaw.Class.create(Rickshaw.Graph.Legend, {
   liftGraph.prototype.build = function () {
     this.$graph = $('<div class="lift-graph-graph" role="presentation"></div>');
     this.$axisY = $('<div class="lift-graph-axis-y" role="presentation"></div>');
-    this.$legend = $('table.lift-graph-results');
+    this.$legend = $('table.lift-graph-result-data');
 
     this.$element.addClass('lift-graph-table')
       .wrap('<div class="lift-graph-container"></div>')

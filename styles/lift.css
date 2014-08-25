@@ -142,45 +142,47 @@
 .lift-graph-legend .line .swatch {
   border-radius: 50%;
 }
-.lift-graph-details {
-  border-collapse: collapse;
+.lift-graph-detail {
+  pointer-events: auto;
+  width: 100%;
+  max-width: 100%;
+  overflow-x: auto;
 }
-.lift-graph-details th,
-.lift-graph-details td {
-  padding: .5em;
+.lift-graph-detail th,
+.lift-graph-detail td {
+  text-align: left;
 }
-.lift-graph-details [style^="background-color"] {
+.lift-graph-detail [style^="background-color"] {
   color: #fff;
   font-weight: normal;
+  text-align: center;
 }
-.lift-graph-details .label {
-  text-align: right;
-}
-.lift-graph-details .active {
+.lift-graph-detail .active {
   background-color: #eee;
 }
-.lift-graph-results {
+.lift-graph-result {
   width: 100%;
+  max-width: 100%;
+  overflow-x: auto;
+}
+.lift-graph-result-data {
+  width: 100%;
+  max-width: 100%;
   margin: 1.3em 0;
   border-color: #bbb;
   border-collapse: collapse;
   font-family: sans-serif;
   font-size: .88em;
 }
-.lift-graph-results th,
-.lift-graph-results td {
-  padding: .5em;
+.lift-graph-result th,
+.lift-graph-result td {
   text-align: left;
-  font-weight: normal;
 }
-.lift-graph-results th:last-child,
-.lift-graph-results td:last-child {
+.lift-graph-result th:last-child,
+.lift-graph-result td:last-child {
   text-align: center;
 }
-.lift-graph-results th {
-  border-bottom: .2em solid #ccc;
-}
-.lift-graph-results .swatch {
+.lift-graph-result .swatch {
   display: inline-block;
   width: .9em;
   height: .9em;
