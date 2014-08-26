@@ -7,9 +7,9 @@ Rickshaw.namespace('Rickshaw.Graph.Axis.TimeElement');
 
 Rickshaw.Graph.Axis.TimeElement = function(args) {
 
-  var self = this;
-  var berthRate = 0.10;
-  var time = args.timeFixture || new Rickshaw.Fixtures.Time();
+  var self = this,
+      berthRate = 0.10,
+      time = args.timeFixture || new Rickshaw.Fixtures.Time();
 
   this.initialize = function(args) {
 
@@ -64,17 +64,16 @@ Rickshaw.Graph.Axis.TimeElement = function(args) {
 
   this.appropriateTimeUnit = function() {
 
-    var unit;
-    var units = time.units;
-
-    var domain = this.graph.x.domain();
-    var rangeSeconds = domain[1] - domain[0];
+    var unit,
+        units = time.units,
+        domain = this.graph.x.domain(),
+        rangeSeconds = domain[1] - domain[0];
 
     units.forEach( function(u) {
       if (Math.floor(rangeSeconds / u.seconds) >= 2) {
         unit = unit || u;
       }
-    } );
+    });
 
     return (unit || time.units[time.units.length - 1]);
   };
@@ -95,8 +94,8 @@ Rickshaw.Graph.Axis.TimeElement = function(args) {
 
     this.ticks = this.staticTicks || Math.floor(this.graph.width / this.pixelsPerTick);
 
-    var berth = Math.floor(this.width * berthRate / 2) || 0;
-    var transform;
+    var berth = Math.floor(this.width * berthRate / 2) || 0,
+        transform;
 
     if (this.orientation == 'top') {
       var yOffset = this.height || this.graph.height;
@@ -133,8 +132,8 @@ Rickshaw.Graph.Axis.TimeElement = function(args) {
 
     if (typeof window !== 'undefined') {
 
-      var style = window.getComputedStyle(element, null);
-      var elementHeight = parseInt(style.getPropertyValue('height'), 10);
+      var style = window.getComputedStyle(element, null),
+          elementHeight = parseInt(style.getPropertyValue('height'), 10);
 
       if (!args.auto) {
         var elementWidth = parseInt(style.getPropertyValue('width'), 10);
@@ -201,8 +200,8 @@ Rickshaw.Graph.Axis.LabeledY = Rickshaw.Class.create(Rickshaw.Graph.Axis.Y, {
     if (this.tickValues) axis.tickValues(this.tickValues);
 
     if (this.orientation == 'left') {
-      var berth = this.height * this.berthRate;
-      var transform = 'translate(' + this.width + ', ' + berth + ')';
+      var berth = this.height * this.berthRate,
+          transform = 'translate(' + this.width + ', ' + berth + ')';
     }
 
     if (this.element) {
@@ -225,7 +224,7 @@ Rickshaw.Graph.Axis.LabeledY = Rickshaw.Class.create(Rickshaw.Graph.Axis.Y, {
       .text(this.label);
 
     return axis;
-  },
+  }
 });
 
 /**
@@ -303,7 +302,8 @@ Rickshaw.Graph.ClickDetail = Rickshaw.Class.create(Rickshaw.Graph.HoverDetail, {
     return '<div class="lift-graph-detail"><table class="lift-graph-detail-data">' + head() + rows() + '</table></div>';
   },
   render: function (args) {
-    var graph = this.graph,
+    var $ = jQuery,
+        graph = this.graph,
         points = args.points,
         point = points.filter( function(p) { return p.active } ).shift();
 
@@ -447,8 +447,9 @@ Rickshaw.Graph.TableLegend = Rickshaw.Class.create(Rickshaw.Graph.Legend, {
   },
 
   render: function() {
-    var self = this;
-    var $label = $(this.element).find('thead > tr > th:first-child');
+    var $ = jQuery,
+        self = this,
+        $label = $(this.element).find('thead > tr > th:first-child');
 
     // Add a new column label for the legend.
     $(this.element).find('thead > tr').prepend('<th>Legend</th>');
@@ -463,7 +464,9 @@ Rickshaw.Graph.TableLegend = Rickshaw.Class.create(Rickshaw.Graph.Legend, {
     } );
   },
   addLine: function (series) {
-    var self = this;
+    var $ = jQuery,
+        self = this;
+
     $(this.element).find('tbody > tr').each(function (index, row) {
       if ($(row).find('td:first-child').text() == series.name) {
         var line = document.createElement('td');
@@ -527,7 +530,7 @@ Rickshaw.Graph.TableLegend = Rickshaw.Class.create(Rickshaw.Graph.Legend, {
     this.$element = null
 
     this.init('liftGraph', element, options);
-  };
+  }
 
   // Define the plugin defaults.
   liftGraph.DEFAULTS = {
@@ -553,27 +556,27 @@ Rickshaw.Graph.TableLegend = Rickshaw.Class.create(Rickshaw.Graph.Legend, {
     this.enabled = true
 
     this.render();
-  };
+  }
 
   // Enable the graph.
   liftGraph.prototype.enable = function () {
     this.enabled = true;
-  };
+  }
 
   // Disable the graph.
   liftGraph.prototype.disable = function () {
     this.enabled = false;
-  };
+  }
 
   // Get the option value of a data attribute.
   liftGraph.prototype.dataAttr = function (key) {
     return this.$element.attr('data-' + this.type + '-' + key);
-  };
+  }
 
   // Get default values.
   liftGraph.prototype.getDefaults = function () {
     return liftGraph.DEFAULTS;
-  };
+  }
 
   // Reset the table.
   liftGraph.prototype.destroy = function () {
@@ -587,7 +590,7 @@ Rickshaw.Graph.TableLegend = Rickshaw.Class.create(Rickshaw.Graph.Legend, {
       options[i] = this.dataAttr(i) || options[i];
     }
     return options;
-  };
+  }
 
   // Collect the data from the table.
   liftGraph.prototype.getData = function () {
@@ -622,7 +625,7 @@ Rickshaw.Graph.TableLegend = Rickshaw.Class.create(Rickshaw.Graph.Legend, {
 
     this.columns = columns;
     this.groups = grouped;
-  };
+  }
 
   // Build graphing coordinates.
   liftGraph.prototype.buildSeries = function (columnX, columnY) {
@@ -640,7 +643,7 @@ Rickshaw.Graph.TableLegend = Rickshaw.Class.create(Rickshaw.Graph.Legend, {
         for (var i = 0; i < groups[key].length; i++) {
           data.push({
             x: parseFloat(groups[key][i][xKey]),
-            y: parseFloat(groups[key][i][yKey]),
+            y: parseFloat(groups[key][i][yKey])
           });
         }
 
@@ -656,7 +659,7 @@ Rickshaw.Graph.TableLegend = Rickshaw.Class.create(Rickshaw.Graph.Legend, {
     }
 
     this.series = series;
-  };
+  }
 
   // Get the optimal number of palette colors.
   liftGraph.prototype.getPalette = function () {
@@ -752,7 +755,7 @@ Rickshaw.Graph.TableLegend = Rickshaw.Class.create(Rickshaw.Graph.Legend, {
     this.axisX = new Rickshaw.Graph.Axis.TimeElement({
       element: this.$axisX[0],
       orientation: 'bottom',
-      graph: this.graph,
+      graph: this.graph
     });
   }
 
@@ -762,7 +765,7 @@ Rickshaw.Graph.TableLegend = Rickshaw.Class.create(Rickshaw.Graph.Legend, {
       element: this.$axisY[0],
       orientation: 'left',
       label: this.columns[this.options.columnY - 1],
-      graph: this.graph,
+      graph: this.graph
     });
   }
 
@@ -770,7 +773,7 @@ Rickshaw.Graph.TableLegend = Rickshaw.Class.create(Rickshaw.Graph.Legend, {
   liftGraph.prototype.setLegend = function () {
     this.legend = new Rickshaw.Graph.TableLegend({
       element: this.$legend[0],
-      graph: this.graph,
+      graph: this.graph
     });
   }
 
@@ -778,7 +781,7 @@ Rickshaw.Graph.TableLegend = Rickshaw.Class.create(Rickshaw.Graph.Legend, {
   liftGraph.prototype.setRangeSlider = function () {
     this.rangeSlider = new Rickshaw.Graph.RangeSlider({
       element: this.$rangeSlider[0],
-      graph: this.graph,
+      graph: this.graph
     });
   }
 
@@ -848,7 +851,7 @@ Rickshaw.Graph.TableLegend = Rickshaw.Class.create(Rickshaw.Graph.Legend, {
     this.setSeriesToggle();
     this.graph.render();
     this.hideTable();
-  };
+  }
 
   // Define the jQuery plugin.
   var old = $.fn.railroad;
