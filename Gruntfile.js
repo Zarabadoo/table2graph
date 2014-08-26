@@ -59,6 +59,8 @@ module.exports = function(grunt) {
     },
     browserSync: {
       options: {
+        browser: ['google chrome', 'firefox', 'safari'],
+        reloadDelay: 2000,
         server: {
           baseDir: './'
         },
@@ -69,7 +71,7 @@ module.exports = function(grunt) {
         watchTask: true
       },
       bsFiles: {
-        src : ['styles/**/*.css', 'scripts/**/*.js', './*.html']
+        src : ['styles/**/{lift,styles}.css', 'scripts/**/*.min.js', './*.html']
       }
     },
     clean: {
@@ -97,7 +99,9 @@ module.exports = function(grunt) {
     concurrent: {
       all: ['sass', 'concurrent:scripts'],
       clean: ['clean:style', 'clean:script'],
-      scripts: ['concat:rickshaw', 'concat:lift', 'concat:module', 'uglify:rickshaw', 'uglify:lift', 'uglify:module']
+      localScripts: ['concat:lift', 'concat:module', 'uglify:lift', 'uglify:module'],
+      dependencyScripts: ['concat:rickshaw', 'uglify:rickshaw'],
+      scripts: ['concurrent:localScripts', 'concurrent:dependencyScripts']
     },
     sass: {
       dist: {
@@ -140,7 +144,7 @@ module.exports = function(grunt) {
       },
       scripts: {
         files: 'lib/scripts/**/*.js',
-        tasks: ['script']
+        tasks: ['concurrent:localScripts']
       },
       gruntfile: {
         files: 'Gruntfile.js',
