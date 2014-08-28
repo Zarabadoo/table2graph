@@ -6,13 +6,27 @@
   font-family: sans-serif;
 }
 .lift-graph * {
-  -moz-box-sizing: border-box;
-       box-sizing: border-box;
+  box-sizing: border-box;
 }
 .lift-graph-container {
   padding-right: 1em;
   padding-left: 3em;
   font-family: sans-serif;
+}
+.lift-graph-container .y-axis-label,
+.lift-graph-container .tick text,
+.lift-graph-container .tick line {
+  color: #666;
+  fill: #666;
+  opacity: 1;
+}
+.lift-graph-container .x_ticks_d3 .tick text {
+  fill: #666;
+  stroke: transparent;
+  stroke-width: 0;
+}
+.lift-graph-container .y_ticks > .tick:first-child {
+  display: none;
 }
 .lift-graph-graph {
   float: left;
@@ -30,8 +44,7 @@
   font-size: 0.85714em;
   line-height: 1.3em;
   box-shadow: 0 0.2em 0 rgba(204, 204, 204, 0.6);
-  -webkit-transition: left .1s ease, right .1s ease;
-          transition: left .1s ease, right .1s ease;
+  transition: left .1s ease, right .1s ease;
 }
 .lift-graph-graph .detail .item.active {
   background: rgba(255, 255, 255, 0.8);
@@ -125,6 +138,9 @@
   clear: both;
   width: 100%;
 }
+.lift-graph-axis-x .rickshaw_graph {
+  max-width: 100%;
+}
 .lift-graph-axis-y {
   float: left;
   width: 3em;
@@ -148,9 +164,34 @@
   max-width: 100%;
   overflow-x: auto;
 }
+.lift-graph-detail-data {
+  margin: 0;
+  border: none;
+  border-collapse: collapse;
+  border-spacing: 0;
+  font-size: 1em;
+}
+.inactive .lift-graph-detail {
+  pointer-events: none;
+}
+.lift-graph-detail tbody,
+.lift-graph-detail thead {
+  border: none;
+}
 .lift-graph-detail th,
 .lift-graph-detail td {
+  padding: .2em .4em;
   text-align: left;
+  background: none;
+}
+.lift-graph-detail th, .lift-graph-detail th:first-child, .lift-graph-detail th:last-child,
+.lift-graph-detail td,
+.lift-graph-detail td:first-child,
+.lift-graph-detail td:last-child {
+  border: none;
+}
+.lift-graph-detail th {
+  text-transform: none;
 }
 .lift-graph-detail [style^="background-color"] {
   color: #fff;
@@ -171,7 +212,6 @@
   margin: 1.3em 0;
   border-color: #bbb;
   border-collapse: collapse;
-  font-family: sans-serif;
   font-size: .88em;
 }
 .lift-graph-result th,
@@ -190,8 +230,11 @@
   display: inline-block;
   width: .9em;
   height: .9em;
-  margin-right: .9em;
+  margin-right: .6em;
   border-radius: 50%;
+}
+.lift-graph-result .label {
+  font-weight: bold;
 }
 .lift-graph-result .toggle-enabled .line {
   cursor: pointer;
@@ -199,3 +242,5 @@
 .lift-graph-result .toggle-enabled .line.disabled .action {
   opacity: .4;
 }
+
+/*# sourceMappingURL=acquia_lift.report.ab.css.map */

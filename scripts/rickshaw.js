@@ -2540,7 +2540,7 @@ Rickshaw.Graph.RangeSlider.Preview = Rickshaw.Class.create({
 		};
 
 		this.heightRatio = args.heightRatio || this.defaults.heightRatio;
-		this.defaults.gripperColor = d3.rgb(this.defaults.frameColor).darker().toString(); 
+		this.defaults.gripperColor = d3.rgb(this.defaults.frameColor).darker().toString();
 
 		this.configureCallbacks = [];
 		this.slideCallbacks = [];
@@ -2644,7 +2644,7 @@ Rickshaw.Graph.RangeSlider.Preview = Rickshaw.Class.create({
 
 			parent.onUpdate(function() { graph.render(); self.render() });
 
-			parent.onConfigure(function(args) { 
+			parent.onConfigure(function(args) {
 				// don't propagate height
 				delete args.height;
 				args.width = args.width - self.config.frameHandleThickness * 2;
@@ -2684,7 +2684,7 @@ Rickshaw.Graph.RangeSlider.Preview = Rickshaw.Class.create({
 
 		var currentWindow = [masterGraph.window.xMin, masterGraph.window.xMax];
 
-		this.currentFrame[0] = currentWindow[0] === undefined ? 
+		this.currentFrame[0] = currentWindow[0] === undefined ?
 			0 : Math.round(domainScale.invert(currentWindow[0]));
 
 		if (this.currentFrame[0] < 0) this.currentFrame[0] = 0;
@@ -2992,7 +2992,6 @@ Rickshaw.Graph.RangeSlider.Preview = Rickshaw.Class.create({
 		}
 	}
 });
-
 
 Rickshaw.namespace("Rickshaw.Graph.Renderer");
 

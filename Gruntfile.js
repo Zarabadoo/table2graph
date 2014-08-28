@@ -1,5 +1,5 @@
 module.exports = function(grunt) {
-  require('time-grunt');
+  require('time-grunt')(grunt);
 
   var rickshawSrc = [
         'bower_components/rickshaw/src/js/Rickshaw.js',
@@ -40,12 +40,11 @@ module.exports = function(grunt) {
         'bower_components/rickshaw/src/js/Rickshaw.Series.FixedDuration.js',
       ],
       liftSrc = [
-        'lib/scripts/Rickshaw.Graph.Axis.TimeElement.js',
-        'lib/scripts/Rickshaw.Graph.Axis.LabeledY.js',
-        'lib/scripts/Rickshaw.Graph.ClickDetail.js',
-        'lib/scripts/Rickshaw.Graph.TableLegend.js',
-        'lib/scripts/graphs.js',
-        'lib/scripts/lift.js'
+        'lib/js/Rickshaw.Graph.Axis.TimeElement.js',
+        'lib/js/Rickshaw.Graph.Axis.LabeledY.js',
+        'lib/js/Rickshaw.Graph.ClickDetail.js',
+        'lib/js/Rickshaw.Graph.TableLegend.js',
+        'lib/js/acquia_lift.report.ab.js',
       ];
 
 
@@ -89,7 +88,7 @@ module.exports = function(grunt) {
       },
       lift: {
         src: liftSrc,
-        dest: 'scripts/lift.js'
+        dest: 'scripts/acquia_lift.report.ab.js'
       },
       module: {
         src: 'lib/scripts/lift-module.js',
@@ -108,13 +107,9 @@ module.exports = function(grunt) {
         options: {
           style: 'expanded'
         },
-        files: [{
-          expand: true,
-          cwd: 'lib/sass',
-          src: ['**/*.scss'],
-          dest: 'styles',
-          ext: '.css'
-        }]
+        files: {
+          'styles/acquia_lift.report.ab.css': 'lib/css/acquia_lift.report.ab.scss'
+        }
       }
     },
     uglify: {
@@ -131,7 +126,7 @@ module.exports = function(grunt) {
         }]
       },
       lift: {
-        files: { 'scripts/lift.min.js': liftSrc }
+        files: { 'scripts/acquia_lift.report.ab.min.js': liftSrc }
       },
       module: {
         files: { 'scripts/lift-module.min.js': 'lib/scripts/lift-module.js' }
@@ -139,11 +134,11 @@ module.exports = function(grunt) {
     },
     watch: {
       sass: {
-        files: 'lib/sass/**/*.scss',
+        files: 'lib/**/*.scss',
         tasks: ['style']
       },
       scripts: {
-        files: 'lib/scripts/**/*.js',
+        files: 'lib/**/*.js',
         tasks: ['concurrent:localScripts']
       },
       gruntfile: {

@@ -235,6 +235,38 @@ Rickshaw.Graph.Axis.LabeledY = Rickshaw.Class.create(Rickshaw.Graph.Axis.Y, {
 Rickshaw.namespace('Rickshaw.Graph.ClickDetail');
 
 Rickshaw.Graph.ClickDetail = Rickshaw.Class.create(Rickshaw.Graph.HoverDetail, {
+  initialize: function(args) {
+
+		var graph = this.graph = args.graph;
+
+    this.tooltipTimeout;
+    this.wiggleTimeout;
+    this.tooltipPinned = false;
+
+		this.xFormatter = args.xFormatter || function(x) {
+			return new Date( x * 1000 ).toUTCString();
+		};
+
+		this.yFormatter = args.yFormatter || function(y) {
+			return y === null ? y : y.toFixed(2);
+		};
+
+		var element = this.element = document.createElement('div');
+		element.className = 'detail inactive';
+
+		this.visible = true;
+		graph.element.appendChild(element);
+
+		this.lastEvent = null;
+		this._addListeners();
+
+		this.onShow = args.onShow;
+		this.onHide = args.onHide;
+		this.onRender = args.onRender;
+
+		this.formatter = args.formatter || this.formatter;
+
+	},
   formatter: function(series, x, y, formattedX, formattedY, d) {
     var self = this,
         options = this.graph.rawData.options,
@@ -251,7 +283,7 @@ Rickshaw.Graph.ClickDetail = Rickshaw.Class.create(Rickshaw.Graph.HoverDetail, {
               variations = '';
 
           for (var i = 0; i < self.graph.series.length; i++) {
-            variations = variations + '<th style="background-color: ' + self.graph.series[i].color + ';">' + self.graph.series[i].shortName + '</th>';
+            variations += '<th style="background-color: ' + self.graph.series[i].color + ';">' + self.graph.series[i].shortName + '</th>';
           }
 
           return '<thead><tr>' + date + variations + '</tr></thead>';
@@ -264,7 +296,7 @@ Rickshaw.Graph.ClickDetail = Rickshaw.Class.create(Rickshaw.Graph.HoverDetail, {
               output = output + '<td class="active">' + data.data[i].value + '</td>';
             }
             else {
-              output = output + '<td>' + data.data[i].value + '</td>';
+              output += '<td>' + data.data[i].value + '</td>';
             }
           }
 
@@ -277,7 +309,7 @@ Rickshaw.Graph.ClickDetail = Rickshaw.Class.create(Rickshaw.Graph.HoverDetail, {
           for (var key = 0; key < data[series.name].length; key++) {
             if (data[series.name][key][xKey] == x) {
               for (var property in data[series.name][key]) {
-                if (data[series.name][key].hasOwnProperty(property) && property != xKey && property != nameKey) {
+                if (data[series.name][key].hasOwnProperty(property) && property != xKey && property != nameKey && property != nameKey + ' label') {
                   var rowData = {property: property, data: []};
 
                   for (var group in data) {
@@ -290,7 +322,7 @@ Rickshaw.Graph.ClickDetail = Rickshaw.Class.create(Rickshaw.Graph.HoverDetail, {
                     }
                   }
 
-                  output = output + row(rowData);
+                  output += row(rowData);
                 };
               };
             };
@@ -411,17 +443,67 @@ Rickshaw.Graph.ClickDetail = Rickshaw.Class.create(Rickshaw.Graph.HoverDetail, {
     return layout;
   },
   _addListeners: function() {
+    var $ = jQuery,
+        self = this,
+        $element = $(this.element);
+
+		this.graph.element.addEventListener(
+			'mousemove',
+			function(e) {
+        if (this.tooltipPinned === false && $element.hasClass('inactive')) {
+          clearTimeout(this.tooltipTimeout);
+          this.tooltipTimeout = window.setTimeout(function () {
+            self.visible = true;
+            self.update(e);
+          }, 350);
+        }
+        else if (this.tooltipPinned === false) {
+          this.wiggleTimeout = window.setTimeout(function () {
+            if (!$element.is(':hover')) {
+              self.hide();
+            }
+          }, 120);
+        }
+			}.bind(this),
+			false
+		);
+
     this.graph.element.addEventListener(
       'click',
       function(e) {
-        this.visible = true;
-        this.update(e);
+        if (this.tooltipPinned === false) {
+          this.tooltipPinned = true;
+          clearTimeout(this.tooltipTimeout);
+          this.visible = true;
+          this.update(e);
+        }
+        else {
+          this.tooltipPinned = false;
+          this.hide();
+        }
       }.bind(this),
       false
     );
 
-    this.graph.onUpdate( function() { this.update() }.bind(this) );
-  }
+		this.graph.onUpdate( function() { this.update() }.bind(this) );
+
+		this.graph.element.addEventListener(
+			'mouseout',
+			function(e) {
+        if (this.tooltipPinned === false) {
+          var self = this;
+
+  				if (e.relatedTarget && !(e.relatedTarget.compareDocumentPosition(this.graph.element) & Node.DOCUMENT_POSITION_CONTAINS)) {
+            clearTimeout(this.tooltipTimeout);
+            this.tooltipTimeout = window.setTimeout(function () {
+              self.hide();
+            }, 500);
+  				}
+        }
+			}.bind(this),
+			false
+		);
+	}
 });
 
 /**
@@ -432,7 +514,6 @@ Rickshaw.Graph.ClickDetail = Rickshaw.Class.create(Rickshaw.Graph.HoverDetail, {
 Rickshaw.namespace('Rickshaw.Graph.TableLegend');
 
 Rickshaw.Graph.TableLegend = Rickshaw.Class.create(Rickshaw.Graph.Legend, {
-  // className: 'rickshaw_legend',
 
   initialize: function(args) {
     this.element = args.element;
@@ -445,14 +526,10 @@ Rickshaw.Graph.TableLegend = Rickshaw.Class.create(Rickshaw.Graph.Legend, {
     // behavior of the series toggle
     this.graph.onUpdate( function() {} );
   },
-
   render: function() {
     var $ = jQuery,
         self = this,
         $label = $(this.element).find('thead > tr > th:first-child');
-
-    // Add a new column label for the legend.
-    $(this.element).find('thead > tr').prepend('<th>Legend</th>');
 
     this.lines = [];
 
@@ -468,38 +545,37 @@ Rickshaw.Graph.TableLegend = Rickshaw.Class.create(Rickshaw.Graph.Legend, {
         self = this;
 
     $(this.element).find('tbody > tr').each(function (index, row) {
+      var $cell = $(row).find('td:first-child');
+
       if ($(row).find('td:first-child').text() == series.name) {
-        var line = document.createElement('td');
 
-        $(row).prepend(line);
-
-        line.className = 'legend line';
+        $cell.addClass('legend line');
         if (series.disabled) {
-          line.className += ' disabled';
+          $cell.addClass('disabled');
         }
         if (series.className) {
-          d3.select(line).classed(series.className, true);
+          d3.select($cell[0]).classed(series.className, true);
         }
+
+        var label = document.createElement('span');
+        label.className = 'label';
+        label.innerHTML = (series.shortName || series.name) + ': ';
+
+        $cell.prepend(label);
+
+        $cell[0].series = series;
 
         var swatch = document.createElement('div');
         swatch.className = 'swatch';
         swatch.style.backgroundColor = series.color;
 
-        line.appendChild(swatch);
-
-        var label = document.createElement('span');
-        label.className = 'label';
-        label.innerHTML = series.shortName || series.name;
-
-        line.appendChild(label);
-
-        line.series = series;
+        $cell.prepend(swatch);
 
         if (series.noLegend) {
-          line.style.display = 'none';
+          $cell.css('display', 'none');
         }
 
-        var _line = { element: line, series: series };
+        var _line = { element: $cell[0], series: series };
         if (self.shelving) {
           self.shelving.addAnchor(_line);
           self.shelving.updateBehaviour();
@@ -508,7 +584,7 @@ Rickshaw.Graph.TableLegend = Rickshaw.Class.create(Rickshaw.Graph.Legend, {
           self.highlighter.addHighlightEvents(_line);
         }
         self.lines.push(_line);
-        return line;
+        return $cell[0];
       }
     });
   }
@@ -609,6 +685,12 @@ Rickshaw.Graph.TableLegend = Rickshaw.Class.create(Rickshaw.Graph.Legend, {
 
       $(this).children('td').each(function (i) {
         data[row][columns[i]] = $(this).text();
+
+        var label = $(this).attr('data-acquia-lift-variation-label');
+
+        if (label && label.length > 0) {
+          data[row][columns[i] + ' label'] = label;
+        }
       });
     });
 
@@ -628,10 +710,11 @@ Rickshaw.Graph.TableLegend = Rickshaw.Class.create(Rickshaw.Graph.Legend, {
   }
 
   // Build graphing coordinates.
-  liftGraph.prototype.buildSeries = function (columnX, columnY) {
+  liftGraph.prototype.buildSeries = function (columnX, columnY, columnName) {
     var groups = this.groups,
         xKey = this.columns[columnX - 1],
         yKey = this.columns[columnY - 1],
+        nameKey = this.columns[columnName - 1],
         series = [],
         results = $('.lift-graph-results > tbody > tr > td:first-child'),
         counter = 0;
@@ -651,7 +734,7 @@ Rickshaw.Graph.TableLegend = Rickshaw.Class.create(Rickshaw.Graph.Legend, {
           name: key,
           color: this.palette.color(),
           data: data,
-          shortName: key.substring(0, 7) == 'control' ? 'Control' : 'V' + (counter + 1)
+          shortName: groups[key][0][nameKey + ' label'] || key
         };
 
         counter++;
@@ -814,7 +897,7 @@ Rickshaw.Graph.TableLegend = Rickshaw.Class.create(Rickshaw.Graph.Legend, {
     this.$graph = $('<div class="lift-graph-graph" role="presentation"></div>');
     this.$axisY = $('<div class="lift-graph-axis-y" role="presentation"></div>');
     this.$axisX = $('<div class="lift-graph-axis-x" role="presentation"></div>');
-    this.$legend = $('table.lift-graph-result-data');
+    this.$legend = this.$element.siblings('.lift-graph-result').children('table.lift-graph-result-data');
     this.$rangeSlider = $('<div class="lift-graph-range-slider" role="presentation"></div>');
 
     this.$element.addClass('lift-graph-table')
@@ -839,16 +922,13 @@ Rickshaw.Graph.TableLegend = Rickshaw.Class.create(Rickshaw.Graph.Legend, {
   liftGraph.prototype.render = function () {
     this.getData();
     this.getPalette();
-    this.buildSeries(this.options.columnX, this.options.columnY);
+    this.buildSeries(this.options.columnX, this.options.columnY, this.options.columnName);
     this.build();
     this.getGraph();
     this.setAxisX();
     this.setAxisY();
     this.setLegend();
-    this.setRangeSlider();
     this.setHoverDetail();
-    this.setSeriesHighlight();
-    this.setSeriesToggle();
     this.graph.render();
     this.hideTable();
   }
@@ -876,4 +956,4 @@ Rickshaw.Graph.TableLegend = Rickshaw.Class.create(Rickshaw.Graph.Legend, {
   }
 }(jQuery);
 
-//# sourceMappingURL=lift.js.map
+//# sourceMappingURL=acquia_lift.report.ab.js.map

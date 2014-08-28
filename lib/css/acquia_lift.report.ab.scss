@@ -16,6 +16,24 @@
       left: 3em;
     }
     font-family: sans-serif;
+
+    .y-axis-label,
+    .tick text,
+    .tick line {
+      color: #666;
+      fill: #666;
+      opacity: 1;
+    }
+
+    .x_ticks_d3 .tick text {
+      fill: #666;
+      stroke: transparent;
+      stroke-width: 0;
+    }
+
+    .y_ticks > .tick:first-child {
+      display: none;
+    }
   }
 
   &-graph {
@@ -165,6 +183,10 @@
   &-axis-x {
     clear: both;
     width: 100%;
+
+    .rickshaw_graph {
+      max-width: 100%;
+    }
   }
 
   &-axis-y {
@@ -194,9 +216,38 @@
     max-width: 100%;
     overflow-x: auto;
 
+    &-data {
+      margin: 0;
+      border: none;
+      border-collapse: collapse;
+      border-spacing: 0;
+      font-size: 1em;
+    }
+
+    .inactive & {
+      pointer-events: none;
+    }
+
+    tbody,
+    thead {
+      border: none;
+    }
+
     th,
     td {
+      padding: .2em .4em;
       text-align: left;
+      background: none;
+
+      &,
+      &:first-child,
+      &:last-child {
+        border: none;
+      }
+    }
+
+    th {
+      text-transform: none;
     }
 
     [style^="background-color"] {
@@ -221,7 +272,6 @@
       margin: 1.3em 0;
       border-color: #bbb;
       border-collapse: collapse;
-      font-family: sans-serif;
       font-size: .88em;
     }
 
@@ -243,8 +293,12 @@
       display: inline-block;
       width: .9em;
       height: .9em;
-      margin-right: .9em;
+      margin-right: .6em;
       border-radius: 50%;
+    }
+
+    .label {
+      font-weight: bold;
     }
 
     .toggle-enabled .line {
