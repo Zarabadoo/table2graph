@@ -108,7 +108,8 @@ module.exports = function(grunt) {
           style: 'expanded'
         },
         files: {
-          'styles/acquia_lift.report.ab.css': 'lib/css/acquia_lift.report.ab.scss'
+          'styles/acquia_lift.report.ab.css': 'lib/css/acquia_lift.report.ab.scss',
+          'styles/acquia_lift.report.ab.admin.css': 'lib/css/acquia_lift.report.ab.admin.scss'
         }
       }
     },

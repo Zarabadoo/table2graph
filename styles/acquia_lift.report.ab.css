@@ -6,7 +6,8 @@
   font-family: sans-serif;
 }
 .lift-graph * {
-  box-sizing: border-box;
+  -moz-box-sizing: border-box;
+       box-sizing: border-box;
 }
 .lift-graph-container {
   padding-right: 1em;
@@ -44,7 +45,8 @@
   font-size: 0.85714em;
   line-height: 1.3em;
   box-shadow: 0 0.2em 0 rgba(204, 204, 204, 0.6);
-  transition: left .1s ease, right .1s ease;
+  -webkit-transition: left .1s ease, right .1s ease;
+          transition: left .1s ease, right .1s ease;
 }
 .lift-graph-graph .detail .item.active {
   background: rgba(255, 255, 255, 0.8);
@@ -242,5 +244,3 @@
 .lift-graph-result .toggle-enabled .line.disabled .action {
   opacity: .4;
 }
-
-/*# sourceMappingURL=acquia_lift.report.ab.css.map */
